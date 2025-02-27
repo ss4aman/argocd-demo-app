@@ -7,4 +7,4 @@ metadata:
 description: "Release $(SHORT_SHA)"
 deliveryPipeline: projects/worstation-379213/locations/us-central1/deliveryPipelines/argocd-clouddeploy-pipeline
 images:
-  us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo:$(SHORT_SHA): us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo:$(SHORT_SHA)
+  us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo:$(SHORT_SHA): us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo.:$(SHORT_SHA)
