@@ -1,0 +1,17 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: argocd-clouddeploy-pipeline
+description: "Simple pipeline for deploying to GKE via ArgoCD"
+serialPipeline:
+  stages:
+  - targetId: dev
+    profiles: []
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: dev
+description: "Development GKE cluster"
+gke:
+  cluster: projects/worstation-379213/locations/us-central1/clusters/argocd-cluster
