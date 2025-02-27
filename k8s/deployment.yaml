@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-demo-app-deployment
+spec:
+  replicas: 3  # Or however many replicas you want
+  selector:
+    matchLabels:
+      app: argocd-demo-app
+  template:
+    metadata:
+      labels:
+        app: argocd-demo-app
+    spec:
+      containers:
+        - name: argocd-demo-app-container
+          image: us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo/argocd-clouddeploy-app # Skaffold will replace the tag
+          ports:
+            - containerPort: 3000 # Your app listens on port 3000

@@ -1,0 +1,14 @@
+apiVersion: skaffold/v4beta6  # Use a recent Skaffold version
+kind: Config
+build:
+  artifacts:
+    - image: us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo/argocd-clouddeploy-app # REPLACE with your actual project/repo
+      context: .  # Build context is the project root
+      docker:
+        dockerfile: Dockerfile # Your Dockerfile is named 'Dockerfile'
+  #googleCloudBuild: {} # You can use Cloud Build within Skaffold, but you're already using it separately
+manifests:
+  rawYaml:
+    - k8s/*.yaml  # Look for Kubernetes manifests in a 'k8s' directory
+deploy:
+  kubectl: {} # You are using ArgoCD. So, no need for direct kubectl deployment
