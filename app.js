@@ -4,7 +4,7 @@ const app = express();
 const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello from ArgoCD Demo!');
+  res.send('Hello from Argo CD & Cloud Deploy!');
 });
 
 app.listen(port, () => {
