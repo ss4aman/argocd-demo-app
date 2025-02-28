@@ -19,12 +19,12 @@ steps:
         cd argocd-gitops-manifests/base
         sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$SHORT_SHA|g" deployment.yaml
         cat deployment.yaml
-        git -C ../argocd-gitops-manifests config user.email "puriaman1995@gmail.com"
-        git -C ../argocd-gitops-manifests config user.name "Aman Puri"
-        git -C ../argocd-gitops-manifests add .
-        git -C ../argocd-gitops-manifests commit -m "Update image tag to $SHORT_SHA"
-        git -C ../argocd-gitops-manifests push origin HEAD:main
+        cd ..
+        git config user.email "puriaman1995@gmail.com"
+        git config user.name "Aman Puri"
+        git add .
+        git commit -m "Update image tag to $SHORT_SHA"
+        git push origin HEAD:main
 substitutions:
   _GITHUB_REPO_OWNER: "ss4aman" # replace with your github repo owner
   _GITHUB_REPO_NAME: "argocd-gitops-manifests" # replace with your github repo name
-
