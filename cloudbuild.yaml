@@ -17,11 +17,14 @@ steps:
         echo "$SHORT_SHA" > image_tag.txt
         ls -al
         cat image_tag.txt
-  - name: 'gcr.io/cloud-builders/git'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'clone'
-      - "https://github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
-      - 'argocd-gitops-manifests'
+      - '-c'
+      - |
+        gcloud secrets versions access latest --secret=github-pat > /tmp/github-pat
+        git clone "https://cloudbuild:$$(cat /tmp/github-pat)@github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git" tmp-argocd-gitops-manifests
+        mv tmp-argocd-gitops-manifests argocd-gitops-manifests
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -57,13 +60,6 @@ steps:
       - commit
       - '-m'
       - 'Update image tag to $SHORT_SHA'
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud secrets versions access latest --secret=github-pat > /tmp/github-pat
-        git -C argocd-gitops-manifests remote set-url origin "https://cloudbuild:$$(cat /tmp/github-pat)@github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
   - name: 'gcr.io/cloud-builders/git'
     args:
       - '-C'
