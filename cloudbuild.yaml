@@ -24,6 +24,7 @@ steps:
         git config user.name "Aman Puri"
         git add .
         git commit -m "Update image tag to $SHORT_SHA"
+        git remote set-url origin "https://cloudbuild:$(cat /tmp/github-pat)@github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
         git push origin HEAD:main
 substitutions:
   _GITHUB_REPO_OWNER: "ss4aman" # replace with your github repo owner
