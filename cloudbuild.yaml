@@ -24,7 +24,7 @@ steps:
   - '-c'
   - |
     cd argocd-gitops-manifests/base
-    sed -i "s|us-central1-docker.pkg.dev/worstation-379213/argocd-clouddeploy-repo/argocd-clouddeploy-app:latest|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$(cat ../../image_tag.txt)|g" deployment.yaml
+    sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$(cat ../../image_tag.txt)|g" deployment.yaml
     cat deployment.yaml
 - name: 'gcr.io/cloud-builders/git'
   args:
@@ -60,6 +60,10 @@ steps:
     - push
     - origin
     - 'HEAD:main'
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/github-pat/versions/latest
+      env: 'GITHUB_PAT'
 substitutions:
   _GITHUB_REPO_OWNER: "ss4aman" # replace with your github repo owner
   _GITHUB_REPO_NAME: "argocd-gitops-manifests" # replace with your github repo name
