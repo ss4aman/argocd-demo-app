@@ -71,10 +71,7 @@ steps:
       - push
       - origin
       - 'HEAD:main'
-availableSecrets:
-  secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/github-pat/versions/latest
-      env: 'GITHUB_PAT'
+
 substitutions:
   _GITHUB_REPO_OWNER: 'ss4aman' # replace with your github repo owner
   _GITHUB_REPO_NAME: 'argocd-gitops-manifests' # replace with your github repo name
