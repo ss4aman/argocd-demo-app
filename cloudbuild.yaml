@@ -20,18 +20,15 @@ steps:
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
+      - '-c'
       - |
-        mkdir -p ~/.ssh
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git clone git@github.com:${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git argocd-gitops-manifests
+        mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts && git clone git@github.com:${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git argocd-gitops-manifests
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        cd argocd-gitops-manifests/base
-        sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$(cat ../../image_tag.txt)|g" deployment.yaml
-        cat deployment.yaml
+        cd argocd-gitops-manifests/base && sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$(cat ../../image_tag.txt)|g" deployment.yaml && cat deployment.yaml
   - name: 'gcr.io/cloud-builders/git'
     args:
       - '-C'
