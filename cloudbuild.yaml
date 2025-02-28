@@ -9,37 +9,19 @@ steps:
     args:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$SHORT_SHA'
+  - name: 'gcr.io/cloud-builders/git'
+    args:
+      - 'clone'
+      - "https://github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
+      - 'argocd-gitops-manifests'
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "$SHORT_SHA" > image_tag.txt
-        ls -al
-        cat image_tag.txt
-  - name: 'ubuntu:latest'
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - apt-get update && apt-get install -y openssh-client git
-  - name: 'ubuntu:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-  - name: 'ubuntu:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        git clone git@github.com:${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git argocd-gitops-manifests
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cd argocd-gitops-manifests/base && sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$(cat ../../image_tag.txt)|g" deployment.yaml && cat deployment.yaml
+        cd argocd-gitops-manifests/base
+        sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$SHORT_SHA|g" deployment.yaml
+        cat deployment.yaml
   - name: 'gcr.io/cloud-builders/git'
     args:
       - '-C'
@@ -74,7 +56,7 @@ steps:
       - push
       - origin
       - 'HEAD:main'
-
 substitutions:
-  _GITHUB_REPO_OWNER: 'ss4aman' # replace with your github repo owner
-  _GITHUB_REPO_NAME: 'argocd-gitops-manifests' # replace with your github repo name
+  _GITHUB_REPO_OWNER: "ss4aman" # replace with your github repo owner
+  _GITHUB_REPO_NAME: "argocd-gitops-manifests" # replace with your github repo name
+
