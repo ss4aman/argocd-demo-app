@@ -17,7 +17,8 @@ steps:
         echo "$SHORT_SHA" > image_tag.txt
         ls -al
         cat image_tag.txt
-  - name: 'gcr.io/cloud-builders/git'
+  - name: 'ubuntu'
+    entrypoint: 'bash'
     args:
       - |
         mkdir -p ~/.ssh
