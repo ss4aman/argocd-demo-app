@@ -20,7 +20,7 @@ steps:
   - name: 'gcr.io/cloud-builders/git'
     args:
       - 'clone'
-      - "https://github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
+      - "git@github.com:${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
       - 'argocd-gitops-manifests'
   - name: 'ubuntu'
     entrypoint: 'bash'
