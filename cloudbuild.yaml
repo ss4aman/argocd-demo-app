@@ -9,53 +9,21 @@ steps:
     args:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$SHORT_SHA'
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - 'clone'
-      - "https://github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git"
-      - 'argocd-gitops-manifests'
-  - name: 'ubuntu'
+  - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
+        gcloud secrets versions access latest --secret=github-pat > /tmp/github-pat
+        git clone https://cloudbuild:$(cat /tmp/github-pat)@github.com/${_GITHUB_REPO_OWNER}/${_GITHUB_REPO_NAME}.git argocd-gitops-manifests
         cd argocd-gitops-manifests/base
         sed -i "s|us-central1-docker.pkg.dev/[^/]*/argocd-clouddeploy-repo/argocd-clouddeploy-app:[^ ]*|us-central1-docker.pkg.dev/$PROJECT_ID/argocd-clouddeploy-repo/argocd-clouddeploy-app:$SHORT_SHA|g" deployment.yaml
         cat deployment.yaml
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - '-C'
-      - 'argocd-gitops-manifests'
-      - config
-      - user.email
-      - 'cloudbuild@example.com'
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - '-C'
-      - 'argocd-gitops-manifests'
-      - config
-      - user.name
-      - 'Cloud Build'
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - '-C'
-      - 'argocd-gitops-manifests'
-      - add
-      - '.'
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - '-C'
-      - 'argocd-gitops-manifests'
-      - commit
-      - '-m'
-      - 'Update image tag to $SHORT_SHA'
-  - name: 'gcr.io/cloud-builders/git'
-    args:
-      - '-C'
-      - 'argocd-gitops-manifests'
-      - push
-      - origin
-      - 'HEAD:main'
+        git -C ../argocd-gitops-manifests config user.email "puriaman1995@gmail.com"
+        git -C ../argocd-gitops-manifests config user.name "Aman Puri"
+        git -C ../argocd-gitops-manifests add .
+        git -C ../argocd-gitops-manifests commit -m "Update image tag to $SHORT_SHA"
+        git -C ../argocd-gitops-manifests push origin HEAD:main
 substitutions:
   _GITHUB_REPO_OWNER: "ss4aman" # replace with your github repo owner
   _GITHUB_REPO_NAME: "argocd-gitops-manifests" # replace with your github repo name
